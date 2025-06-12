@@ -99,3 +99,12 @@ function shuffle(arr) {
   }
   return a;
 }
+window.showUpload = () => {
+  document.getElementById('uploadArea').style.display = 'block';
+  document.getElementById('userUploadArea').style.display = 'none';
+};
+
+window.showUserUpload = () => {
+  document.getElementById('userUploadArea').style.display = 'block';
+  document.getElementById('uploadArea').style.display = 'none';
+};
