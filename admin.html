@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="upload-users.js"></script>
   <meta charset="utf-8">
   <title>Admin Panel</title>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="admin.js"></script>
   <script type="module" src="upload-questions.js"></script>
+  <script type="module" src="upload-users.js"></script>
 </head>
 <body>
   <h2>Admin Panel</h2>
-  <button onclick="loadLogs()">View Logs</button>
-  <button onclick="showUpload()">📤 Upload Questions (.CSV)</button>
+
+  <button onclick="loadLogs()">📑 View Logs</button>
   <button onclick="assignReexam()">♻️ Assign Re-Exam</button>
+  <button onclick="viewResults()">📊 View Results</button>
+  <button onclick="showUpload()">📤 Upload Questions (.CSV)</button>
+  <button onclick="showUserUpload()">👤 Upload Users (.CSV)</button>
 
   <div id="logsArea"></div>
+
+  <!-- Upload Questions Section -->
   <div id="uploadArea" style="margin-top: 30px; display: none;">
     <h3>Upload Questions (.CSV)</h3>
     <div id="dropZone" style="border: 2px dashed #ccc; padding: 30px; text-align: center;">
@@ -24,15 +29,17 @@
     <div id="preview" style="margin-top: 20px;"></div>
     <button id="uploadBtn" style="display:none;">Upload to Firestore</button>
   </div>
-  <button onclick="showUserUpload()">👤 Upload Users (.CSV)</button>
- <div id="userUploadArea" style="margin-top: 30px; display: none;">
-  <h3>Upload Users (.CSV)</h3>
-  <div id="userDropZone" style="border: 2px dashed #ccc; padding: 30px; text-align: center;">
-    Drag and drop your CSV file here or click to select.
-    <input type="file" id="userFileInput" accept=".csv" style="display:none;">
+
+  <!-- Upload Users Section -->
+  <div id="userUploadArea" style="margin-top: 30px; display: none;">
+    <h3>Upload Users (.CSV)</h3>
+    <div id="userDropZone" style="border: 2px dashed #ccc; padding: 30px; text-align: center;">
+      Drag and drop your CSV file here or click to select.
+      <input type="file" id="userFileInput" accept=".csv" style="display:none;">
+    </div>
+    <div id="userPreview" style="margin-top: 20px;"></div>
+    <button id="userUploadBtn" style="display:none;">Upload to Firestore</button>
   </div>
-  <div id="userPreview" style="margin-top: 20px;"></div>
-  <button id="userUploadBtn" style="display:none;">Upload to Firestore</button>
-</div>
+
 </body>
 </html>
