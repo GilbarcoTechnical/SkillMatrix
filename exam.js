@@ -1,3 +1,4 @@
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
@@ -5,17 +6,19 @@ import { firebaseConfig } from "./firebase-config.js";
 initializeApp(firebaseConfig);
 const db = getFirestore();
 
-let questions = [];
-let timeLeft = 3600; // 60 minutes in seconds
-let timerInterval;
-
 const userId = sessionStorage.getItem('userId');
 const LOCAL_KEY = `exam-${userId}`;
 const SUBMIT_KEY = `submitted-${userId}`;
+
 if (localStorage.getItem(SUBMIT_KEY)) {
   alert("You have already submitted this exam.");
   window.location.href = "index.html";
 }
+
+let questions = [];
+let timeLeft = 3600;
+let timerInterval;
+
 function formatTime(sec) {
   const m = Math.floor(sec / 60).toString().padStart(2, '0');
   const s = (sec % 60).toString().padStart(2, '0');
@@ -76,9 +79,11 @@ window.submitExam = async () => {
   await addDoc(collection(db, 'responses'), {
     userId,
     answers,
+    session: sessionStorage.getItem('session') || "Default",
     timestamp: Timestamp.now()
   });
 
+  localStorage.setItem(SUBMIT_KEY, true);
   localStorage.removeItem(`${LOCAL_KEY}-questions`);
   localStorage.removeItem(`${LOCAL_KEY}-timer`);
   alert("Submitted successfully!");
