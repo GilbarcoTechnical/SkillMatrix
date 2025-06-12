@@ -40,10 +40,11 @@ function handleUserFile(file) {
   reader.onload = e => {
     const text = e.target.result;
     const rows = text.trim().split("\n").map(r => r.split(","));
-    if (rows[0][0] !== "userId" || rows[0][1] !== "password" || rows[0][2] !== "session") {
-      preview.innerText = "❌ Invalid CSV header format.";
-      return;
-    }
+   const headers = rows[0].map(h => h.trim().toLowerCase());
+if (!(headers.includes("userid") && headers.includes("password") && headers.includes("session"))) {
+  preview.innerText = "❌ Invalid CSV header format. Required: userId,password,session";
+  return;
+}
 
     parsedUsers = rows.slice(1).map(r => ({
       userId: r[0],
