@@ -108,3 +108,7 @@ window.showUserUpload = () => {
   document.getElementById('userUploadArea').style.display = 'block';
   document.getElementById('uploadArea').style.display = 'none';
 };
+window.showUserUpload = () => {
+  document.getElementById('userUploadArea').style.display = 'block';
+  document.getElementById('uploadArea').style.display = 'none'; // hides questions panel
+};
