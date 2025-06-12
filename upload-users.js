@@ -8,6 +8,7 @@ const db = getFirestore();
 
 window.showUserUpload = () => {
   document.getElementById('userUploadArea').style.display = 'block';
+  document.getElementById('uploadArea')?.style.display = 'none';
 };
 
 const dropZone = document.getElementById("userDropZone");
@@ -39,17 +40,22 @@ function handleUserFile(file) {
   const reader = new FileReader();
   reader.onload = e => {
     const text = e.target.result;
-    const rows = text.trim().split("\n").map(r => r.split(","));
-   const headers = rows[0].map(h => h.trim().toLowerCase());
-if (!(headers.includes("userid") && headers.includes("password") && headers.includes("session"))) {
-  preview.innerText = "❌ Invalid CSV header format. Required: userId,password,session";
-  return;
-}
+    const rows = text.trim().split(/\r?\n/).map(r => r.split(","));
+    const headerRow = rows[0].map(h => h.trim().toLowerCase());
+
+    const userIdIndex = headerRow.indexOf("userid");
+    const passwordIndex = headerRow.indexOf("password");
+    const sessionIndex = headerRow.indexOf("session");
+
+    if (userIdIndex === -1 || passwordIndex === -1 || sessionIndex === -1) {
+      preview.innerText = "❌ Invalid CSV header format. Required: userId,password,session";
+      return;
+    }
 
     parsedUsers = rows.slice(1).map(r => ({
-      userId: r[0],
-      password: r[1],
-      session: r[2]
+      userId: r[userIdIndex]?.trim(),
+      password: r[passwordIndex]?.trim(),
+      session: r[sessionIndex]?.trim()
     }));
 
     preview.innerHTML = `<b>${parsedUsers.length}</b> users ready. First 2:<br>` +
