@@ -5,10 +5,22 @@
   <title>Admin Panel</title>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="admin.js"></script>
+  <script type="module" src="upload-questions.js"></script>
 </head>
 <body>
   <h2>Admin Panel</h2>
   <button onclick="loadLogs()">View Logs</button>
-  <ul id="logs"></ul>
+  <button onclick="showUpload()">📤 Upload Questions (.CSV)</button>
+
+  <div id="logsArea"></div>
+  <div id="uploadArea" style="margin-top: 30px; display: none;">
+    <h3>Upload Questions (.CSV)</h3>
+    <div id="dropZone" style="border: 2px dashed #ccc; padding: 30px; text-align: center;">
+      Drag and drop your CSV file here or click to select.
+      <input type="file" id="fileInput" accept=".csv" style="display:none;">
+    </div>
+    <div id="preview" style="margin-top: 20px;"></div>
+    <button id="uploadBtn" style="display:none;">Upload to Firestore</button>
+  </div>
 </body>
 </html>
