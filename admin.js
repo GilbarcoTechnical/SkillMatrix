@@ -15,3 +15,52 @@ window.loadLogs = async () => {
     ul.appendChild(li);
   });
 };
+import { collection, getDocs, doc, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+window.assignReexam = async () => {
+  const sessionName = prompt("Enter base session name (e.g. Jun2025):");
+  if (!sessionName) return;
+
+  const responses = await getDocs(collection(db, 'responses'));
+  const questions = await getDocs(collection(db, 'questions'));
+
+  const allQIDs = questions.docs.map(d => d.id);
+
+  const failedUsers = new Set();
+
+  responses.forEach(doc => {
+    const data = doc.data();
+    const correct = data.answers.filter(a =>
+      questions.docs.find(q => q.id === a.qid)?.data().correct?.sort().join(',') === a.answers?.sort().join(',')
+    ).length;
+    const percent = (correct / 25) * 100;
+    if (percent < 60 && data.session === sessionName) failedUsers.add(data.userId);
+  });
+
+  let i = 1;
+  for (let user of failedUsers) {
+    const reexamSession = `${sessionName}-Re${i++}`;
+    const previous = responses.docs.find(r => r.data().userId === user && r.data().session === sessionName);
+    const oldQIDs = previous?.data()?.answers.map(a => a.qid) || [];
+
+    const newQIDs = shuffle(allQIDs.filter(qid => !oldQIDs.includes(qid))).slice(0, 25);
+
+    await setDoc(doc(db, 'reexamAssignments', `${user}_${reexamSession}`), {
+      userId: user,
+      session: reexamSession,
+      assignedQIDs: newQIDs,
+      timestamp: Timestamp.now()
+    });
+  }
+
+  alert(`Assigned re-exam to ${failedUsers.size} user(s).`);
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
