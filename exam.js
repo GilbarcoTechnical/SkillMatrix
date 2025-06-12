@@ -11,7 +11,11 @@ let timerInterval;
 
 const userId = sessionStorage.getItem('userId');
 const LOCAL_KEY = `exam-${userId}`;
-
+const SUBMIT_KEY = `submitted-${userId}`;
+if (localStorage.getItem(SUBMIT_KEY)) {
+  alert("You have already submitted this exam.");
+  window.location.href = "index.html";
+}
 function formatTime(sec) {
   const m = Math.floor(sec / 60).toString().padStart(2, '0');
   const s = (sec % 60).toString().padStart(2, '0');
